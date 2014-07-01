@@ -103,6 +103,24 @@ action :create do
       )
       notifies :restart, resources(:service => "rackspace-monitoring-agent"), :delayed
     end
+  elsif type === "agent.plugin.dir_stats" then
+    template "#{confd}/directory-#{label.gsub(' ', '').gsub('/', '').downcase}.yaml" do
+      source "confd/plugin.dir_stats.yaml.erb"
+      owner "root"
+      group "root"
+      mode "0644"
+      action :create
+      variables(
+        :label => label,
+        :notification_plan_id => notification_plan_id,
+        :target => details[:target],
+        :max_files_warn => details[:max_files_warn] || nil,
+        :max_files_crit => details[:max_files_crit] || nil,
+        :max_size_mb_warn => details[:max_size_mb_warn] || nil,
+        :max_size_mb_crit => details[:max_size_mb_crit] || nil
+      )
+      notifies :restart, resources(:service => "rackspace-monitoring-agent"), :delayed
+    end
   elsif type === "remote.ping" then
     template "#{confd}/ping-#{label.gsub(' ', '').gsub('/', '').downcase}.yaml" do
       source "confd/ping.yaml.erb"

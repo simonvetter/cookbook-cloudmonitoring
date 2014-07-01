@@ -15,3 +15,4 @@ alarms:
             if (percentage(metric['used'], metric['total']) > 80) {
                 return new AlarmStatus(WARNING, 'Disk usage is above 80%, #{used} out of #{total}');
             }
+            return new AlarmStatus(OK, 'Disk usage is below your warning threshold of 80%');
